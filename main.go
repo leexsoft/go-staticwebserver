@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	//静态资源路由注册
 	registerStaticResource()
 
 	err := http.ListenAndServe("127.0.0.1:8800", staticMux)
