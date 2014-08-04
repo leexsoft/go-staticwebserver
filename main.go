@@ -6,18 +6,14 @@ import (
 )
 
 func main() {
-	//静态资源路由注册
-	registerStaticResource()
+	//读取配置文件
+	addr := myServer.App.IP + ":" + myServer.App.Port
 
-	err := http.ListenAndServe("127.0.0.1:8800", staticMux)
+	//静态资源路由注册
+	staticMux.RegisterStaticResource()
+
+	err := http.ListenAndServe(addr, staticMux)
 	if err != nil {
 		log.Fatal("ListenAndServe", err)
 	}
-}
-
-func registerStaticResource() {
-	http.Handle("/js/bootstrap/css/", http.FileServer(http.Dir(STATIC_FOLDER)))
-	http.Handle("/js/bootstrap/js/", http.FileServer(http.Dir(STATIC_FOLDER)))
-	http.Handle("/js/", http.FileServer(http.Dir(STATIC_FOLDER)))
-	http.Handle("/img/", http.FileServer(http.Dir(STATIC_FOLDER)))
 }

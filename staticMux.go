@@ -13,22 +13,17 @@ import (
 	"strings"
 )
 
-const (
-	STATIC_FOLDER = "static" //静态文件存放的相对目录（相对exe文件）
-)
-
-const (
-	STATIC_FILE_JS  = ".js"
-	STATIC_FILE_CSS = ".css"
-	STATIC_FILE_JPG = ".jpg"
-	STATIC_FILE_GIF = ".gif"
-	STATIC_FILE_PNG = ".png"
-	STATIC_FILE_ICO = ".ico"
-)
-
-var staticMux = new(StaticMux)
+var staticMux = &StaticMux{sve: myServer}
 
 type StaticMux struct {
+	sve *server
+}
+
+//注册静态资源文件的路由
+func (this *StaticMux) RegisterStaticResource() {
+	for _, folder := range this.sve.GetStaticFolders() {
+		http.Handle(folder, http.FileServer(http.Dir(this.sve.App.Root)))
+	}
 }
 
 // 实现Handler接口
@@ -57,38 +52,30 @@ func (this *StaticMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // 判断是否是静态资源文件
 func (this *StaticMux) isStaticFile(rawUrl string) bool {
-	if strings.HasSuffix(rawUrl, STATIC_FILE_JS) {
-		return true
-	} else if strings.HasSuffix(rawUrl, STATIC_FILE_CSS) {
-		return true
-	} else if strings.HasSuffix(rawUrl, STATIC_FILE_JPG) {
-		return true
-	} else if strings.HasSuffix(rawUrl, STATIC_FILE_GIF) {
-		return true
-	} else if strings.HasSuffix(rawUrl, STATIC_FILE_PNG) {
-		return true
-	} else if strings.HasSuffix(rawUrl, STATIC_FILE_ICO) {
-		return true
-	} else {
-		return false
+	for _, ext := range this.sve.GetStaticFileExtensionds() {
+		if strings.HasSuffix(rawUrl, ext) {
+			return true
+		}
 	}
+
+	return false
 }
 
 // 自动匹配路径的handler
 func (this *StaticMux) staticHandler(w http.ResponseWriter, r *http.Request) {
 	pathHtml := this.buildParseFilePath(r.URL.Path)
 	if len(pathHtml) > 0 {
-		fmt.Printf("ParseFile path is '%s'", (STATIC_FOLDER + pathHtml))
+		fmt.Printf("ParseFile path is '%s'", (this.sve.App.Root + pathHtml))
 		fmt.Println()
 
-		t, err := template.ParseFiles(STATIC_FOLDER + pathHtml)
+		t, err := template.ParseFiles(this.sve.App.Root + pathHtml)
 		if err != nil {
 			fmt.Println("static page parse error:", err.Error())
 			http.NotFound(w, r)
-			return
+		} else {
+			w.Header().Set("content-type", "text/html")
+			t.Execute(w, nil)
 		}
-		w.Header().Set("content-type", "text/html")
-		t.Execute(w, nil)
 	} else {
 		http.NotFound(w, r)
 	}
