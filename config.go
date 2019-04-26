@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var myServer = LoadAppConfig()
+var myServer = loadAppConfig()
 
 type server struct {
 	XMLName xml.Name    `xml:"server"`
@@ -24,23 +24,23 @@ type application struct {
 	StaticFolder string   `xml:"staticfolder"`
 }
 
-func (this *server) GetStaticFileExtensionds() []string {
+func (s *server) GetStaticFileExtensionds() []string {
 	strs := []string{}
-	if len(this.App.StaticFile) > 0 {
-		strs = strings.Split(this.App.StaticFile, "|")
+	if len(s.App.StaticFile) > 0 {
+		strs = strings.Split(s.App.StaticFile, "|")
 	}
 	return strs
 }
 
-func (this *server) GetStaticFolders() []string {
+func (s *server) GetStaticFolders() []string {
 	strs := []string{}
-	if len(this.App.StaticFolder) > 0 {
-		strs = strings.Split(this.App.StaticFolder, "|")
+	if len(s.App.StaticFolder) > 0 {
+		strs = strings.Split(s.App.StaticFolder, "|")
 	}
 	return strs
 }
 
-func LoadAppConfig() *server {
+func loadAppConfig() *server {
 	file, err := os.Open("app.config")
 	if err != nil {
 		fmt.Printf("error: %v", err)
@@ -60,7 +60,6 @@ func LoadAppConfig() *server {
 	if err != nil {
 		fmt.Printf("error: %v", err)
 		return nil
-	} else {
-		return sve
 	}
+	return sve
 }
