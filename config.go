@@ -10,11 +10,6 @@ import (
 
 var myServer = loadAppConfig()
 
-type server struct {
-	XMLName xml.Name    `xml:"server"`
-	App     application `xml:"app"`
-}
-
 type application struct {
 	XMLName      xml.Name `xml:"app"`
 	IP           string   `xml:"ip,attr"`
@@ -22,6 +17,11 @@ type application struct {
 	Root         string   `xml:"root,attr"`
 	StaticFile   string   `xml:"staticfile"`
 	StaticFolder string   `xml:"staticfolder"`
+}
+
+type server struct {
+	XMLName xml.Name    `xml:"server"`
+	App     application `xml:"app"`
 }
 
 func (s *server) GetStaticFileExtensionds() []string {
