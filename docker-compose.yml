@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  staticwebserver:
+    image: staticwebserver
+    build: .
+    ports:
+      - 8800:8800
