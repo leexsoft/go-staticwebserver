@@ -1,0 +1,26 @@
+{
+    "root": "/html",
+    "port": 80,
+    "path": [
+        {
+            "type": "directory",
+            "src": "/",
+            "dst": ""
+        },
+        {
+            "type": "directory",
+            "src": "/css",
+            "dst": "/css"
+        },
+        {
+            "type": "directory",
+            "src": "/js",
+            "dst": "/js"
+        },
+        {
+            "type": "redirect",
+            "src": "/login",
+            "dst": "/"
+        }
+    ]
+}

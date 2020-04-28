@@ -1,14 +1,25 @@
-go-staticwebserver
+# go-staticwebserver
+
 ==================
 
-本服务器是一个非常简单的WEB服务器端，主要为支持一个演示用的静态站点而开发
-* 仅支持处理静态页面
-* 路径支持带后缀名和不带后缀名两种（即/folder/index.htm或/folder/index）
-* 目录的默认页面为index.htm
-* 根据路径自动匹配页面并输出内容，不需要注册多个路由，即使增加页面不需要
+本服务器是一个非常简单的WEB静态资源服务端，可用于前端站点的宿主，*推荐使用docker*
 
-版本.1 固定监听本机端口 8800
+## 配置文件
 
-版本.2 添加配置文件可配置端口信息，并增加能处理的静态资源文件类型和静态资源文件目录的配置项
+* 配置文件必须与可执行文件在同一目录下
+* 配置文件名必须为 app.json
+* 根目录的默认值为`/`,root节可不设值
+* 端口的默认值为`80`,port节必须设值
 
-
+```json
+{
+    "root": "/Users/leexsoft/Documents/Code/leexsoft/github/go/staticwebserver/html",
+    "port": 80,
+    "path": [
+        {"type": "directory", "src": "/", "dst": ""},
+        {"type": "directory", "src": "/css", "dst": "/css"},
+        {"type": "directory", "src": "/js", "dst": "/js"},
+        {"type": "redirect", "src": "/login", "dst": "/"}
+    ]
+}
+```
