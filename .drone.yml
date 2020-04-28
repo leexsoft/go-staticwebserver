@@ -1,0 +1,17 @@
+kind: pipeline
+name: tool-httpd
+
+steps:
+- name: docker
+  image: plugins/docker
+  settings:
+    mirror: https://d4agkkcv.mirror.aliyuncs.com
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: leexsoft/staticweb
+    tags: latest
+  when:
+    branch:
+      - master
